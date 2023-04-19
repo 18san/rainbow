@@ -1,83 +1,24 @@
-/**
- * Python patterns
- *
- * @author Craig Campbell
- */
-Rainbow.extend('python', [
-    /**
-     * don't highlight self as a keyword
-     */
-    {
-        name: 'variable.self',
-        pattern: /self/g
-    },
-    {
-        name: 'constant.language',
-        pattern: /None|True|False|NotImplemented|\.\.\./g
-    },
-    {
-        name: 'support.object',
-        pattern: /object/g
-    },
-
-    /**
-     * built in python functions
-     *
-     * this entire list is 580 bytes minified / 379 bytes gzipped
-     *
-     * @see http://docs.python.org/library/functions.html
-     *
-     * @todo strip some out or consolidate the regexes with matching patterns?
-     */
-    {
-        name: 'support.function.python',
-        pattern: /\b(bs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|bin|file|iter|property|tuple|bool|filter|len|range|type|bytearray|float|list|raw_input|unichr|callable|format|locals|reduce|unicode|chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|__import__|complex|hash|min|set|apply|delattr|help|next|setattr|buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern)(?=\()/g
-    },
-    {
-        matches: {
-            1: 'keyword'
-        },
-        pattern: /\b(pass|lambda|with|is|not|in|from|elif|raise|del)(?=\b)/g
-    },
-    {
-        matches: {
-            1: 'storage.class',
-            2: 'entity.name.class',
-            3: 'entity.other.inherited-class'
-        },
-        pattern: /(class)\s+(\w+)\((\w+?)\)/g
-    },
-    {
-        matches: {
-            1: 'storage.function',
-            2: 'support.magic'
-        },
-        pattern: /(def)\s+(__\w+)(?=\()/g
-    },
-    {
-        name: 'support.magic',
-        pattern: /__(name)__/g
-    },
-    {
-        matches: {
-            1: 'keyword.control',
-            2: 'support.exception.type'
-        },
-        pattern: /(except) (\w+):/g
-    },
-    {
-        matches: {
-            1: 'storage.function',
-            2: 'entity.name.function'
-        },
-        pattern: /(def)\s+(\w+)(?=\()/g
-    },
-    {
-        name: 'entity.name.function.decorator',
-        pattern: /@([\w\.]+)/g
-    },
-    {
-        name: 'comment.docstring',
-        pattern: /('{3}|"{3})[\s\S]*?\1/gm
-    }
-], 'generic');
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+steps = np.array([(1,0), (0,-1), (-1,0),(0,1)]) # East, South, West, North
+print(steps)
+numSteps = 10000  #行走步数
+locs      = np.zeros((numSteps,2))
+for k in range(1,numSteps):
+    step = steps[np.random.choice(np.arange(4))]
+    locs[k]  = locs[k-1] + step
+    
+dist = np.sqrt(locs[:,0]**2 + locs[:,1]**2)            
+dist_min = np.min(dist)
+dist_max = np.max(dist)
+origins = [] 
+for k in range(numSteps):
+    if locs[k,0]==0 and locs[k,1]==0:
+        origins.append(k)
+print('numSteps = {0}, final loc = {1}, dist = {2}, dist_min = {3}, dist_max = {4}'.format(numSteps,locs[-1],dist[-1], dist_min, dist_max))
+print(origins)
+ 
+plt.plot(locs[:,0],locs[:,1])
+plt.title('random walks: {0} steps'.format(numSteps))
+plt.show()
